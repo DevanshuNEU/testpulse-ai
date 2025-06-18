@@ -1,0 +1,86 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model TestSuite {
+  id          String   @id @default(cuid())
+  name        String
+  startTime   DateTime
+  endTime     DateTime?
+  totalTests  Int
+  passed      Int      @default(0)
+  failed      Int      @default(0)
+  skipped     Int      @default(0)
+  flaky       Int      @default(0)
+  duration    Int      // in milliseconds
+  browser     String
+  environment String
+  commit      String?
+  branch      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  testResults TestResult[]
+
+  @@map("test_suites")
+}
+model TestResult {
+  id          String     @id @default(cuid())
+  testName    String
+  testFile    String
+  status      TestStatus
+  duration    Int        // in milliseconds
+  startTime   DateTime
+  endTime     DateTime?
+  error       String?    @db.Text
+  screenshot  String?
+  retry       Int        @default(0)
+  browser     String
+  projectName String
+  tags        String[]   @default([])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  // Relations
+  testSuite   TestSuite @relation(fields: [testSuiteId], references: [id], onDelete: Cascade)
+  testSuiteId String
+
+  @@map("test_results")
+}
+
+enum TestStatus {
+  PASSED
+  FAILED
+  SKIPPED
+  FLAKY
+}
+
+model FailurePattern {
+  id           String   @id @default(cuid())
+  pattern      String   @unique
+  count        Int      @default(1)
+  severity     Severity @default(MEDIUM)
+  aiSummary    String?  @db.Text
+  suggestedFix String?  @db.Text
+  testNames    String[] @default([])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("failure_patterns")
+}
+
+enum Severity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}

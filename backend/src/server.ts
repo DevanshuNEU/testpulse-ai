@@ -29,10 +29,25 @@ app.get('/health', (req, res) => {
   });
 });
 
-// API routes will be added here
-app.use('/api', (req, res, next) => {
-  // Placeholder for API routes
-  res.json({ message: 'TestPulse AI API - Coming Soon!' });
+// Import routes
+import testSuitesRouter from './routes/testSuites';
+import analyticsRouter from './routes/analytics';
+
+// API routes
+app.use('/api/test-suites', testSuitesRouter);
+app.use('/api/analytics', analyticsRouter);
+
+// API info endpoint
+app.get('/api', (req, res) => {
+  res.json({ 
+    message: 'TestPulse AI API',
+    version: '1.0.0',
+    endpoints: {
+      health: '/health',
+      testSuites: '/api/test-suites',
+      analytics: '/api/analytics',
+    }
+  });
 });
 
 // Error handling middleware
