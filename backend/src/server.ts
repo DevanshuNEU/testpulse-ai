@@ -4,6 +4,10 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 
+// Import routes
+import testSuitesRouter from './routes/testSuites';
+import analyticsRouter from './routes/analytics';
+
 // Load environment variables
 dotenv.config();
 
@@ -28,10 +32,6 @@ app.get('/health', (req, res) => {
     service: 'TestPulse AI Backend'
   });
 });
-
-// Import routes
-import testSuitesRouter from './routes/testSuites';
-import analyticsRouter from './routes/analytics';
 
 // API routes
 app.use('/api/test-suites', testSuitesRouter);

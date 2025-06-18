@@ -5,7 +5,7 @@ import { z } from 'zod';
 const router = Router();
 
 // Get all test suites with pagination
-router.get('/test-suites', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
@@ -57,7 +57,7 @@ router.get('/test-suites', async (req, res) => {
   }
 });
 // Get test suite by ID with results
-router.get('/test-suites/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
 
