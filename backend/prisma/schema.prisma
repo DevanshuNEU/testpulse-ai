@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -37,16 +37,16 @@ model TestResult {
   id          String     @id @default(cuid())
   testName    String
   testFile    String
-  status      TestStatus
+  status      String     // PASSED, FAILED, SKIPPED, FLAKY
   duration    Int        // in milliseconds
   startTime   DateTime
   endTime     DateTime?
-  error       String?    @db.Text
+  error       String?
   screenshot  String?
   retry       Int        @default(0)
   browser     String
   projectName String
-  tags        String[]   @default([])
+  tags        String     @default("")  // JSON string of tags
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 
@@ -57,30 +57,16 @@ model TestResult {
   @@map("test_results")
 }
 
-enum TestStatus {
-  PASSED
-  FAILED
-  SKIPPED
-  FLAKY
-}
-
 model FailurePattern {
   id           String   @id @default(cuid())
   pattern      String   @unique
   count        Int      @default(1)
-  severity     Severity @default(MEDIUM)
-  aiSummary    String?  @db.Text
-  suggestedFix String?  @db.Text
-  testNames    String[] @default([])
+  severity     String   @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL
+  aiSummary    String?
+  suggestedFix String?
+  testNames    String   @default("")       // JSON string of test names
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
   @@map("failure_patterns")
-}
-
-enum Severity {
-  LOW
-  MEDIUM
-  HIGH
-  CRITICAL
 }
