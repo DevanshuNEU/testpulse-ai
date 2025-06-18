@@ -26,11 +26,22 @@ app.use(express.urlencoded({ extended: true }));
 
 // Health check endpoint
 app.get('/health', (req, res) => {
+  console.log('🏥 Health check called');
   res.json({ 
-    status: 'OK', 
-    timestamp: new Date().toISOString(),
-    service: 'TestPulse AI Backend'
+    success: true,
+    data: {
+      status: 'OK', 
+      timestamp: new Date().toISOString(),
+      service: 'TestPulse AI Backend',
+      port: PORT
+    }
   });
+});
+
+// Test endpoint for debugging
+app.get('/test', (req, res) => {
+  console.log('🧪 Test endpoint called');
+  res.json({ message: 'Backend is working!', timestamp: new Date().toISOString() });
 });
 
 // API routes
