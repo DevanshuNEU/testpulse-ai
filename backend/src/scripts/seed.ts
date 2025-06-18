@@ -60,12 +60,12 @@ async function main() {
         severity: faker.helpers.arrayElement(['LOW', 'MEDIUM', 'HIGH', 'CRITICAL']),
         aiSummary: `This error typically occurs when ${pattern.toLowerCase()}. Common causes include network issues or element state changes.`,
         suggestedFix: `Consider adding explicit waits or improving error handling for: ${pattern}`,
-        testNames: JSON.stringify(faker.helpers.arrayElements([
+        testNames: faker.helpers.arrayElements([
           'login.spec.ts',
           'dashboard.spec.ts', 
           'checkout.spec.ts',
           'profile.spec.ts',
-        ], faker.number.int({ min: 1, max: 3 }))),
+        ], faker.number.int({ min: 1, max: 3 })),
       },
     });
   }
