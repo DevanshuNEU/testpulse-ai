@@ -58,7 +58,7 @@ fi
 
 # Test Frontend Connectivity
 echo -e "\n${YELLOW}5. Testing Frontend Connectivity${NC}"
-FRONTEND_RESPONSE=$(curl -s http://localhost:3001)
+FRONTEND_RESPONSE=$(curl -s http://localhost:3000)
 if echo "$FRONTEND_RESPONSE" | grep -q "TestPulse AI"; then
     echo -e "${GREEN}✓ Frontend: Accessible${NC}"
 else
@@ -67,7 +67,7 @@ fi
 
 echo -e "\n${YELLOW}6. Performance Check${NC}"
 echo -e "${GREEN}✓ Backend Port: 8080${NC}"
-echo -e "${GREEN}✓ Frontend Port: 3001${NC}"
+echo -e "${GREEN}✓ Frontend Port: 3000${NC}"
 
 echo -e "\n${GREEN}🎉 Testing Complete!${NC}"
-echo -e "${YELLOW}Access your dashboard: http://localhost:3001${NC}"
+echo -e "${YELLOW}Access your dashboard: http://localhost:3000${NC}"

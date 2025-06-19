@@ -61,7 +61,7 @@ npm run dev
 ```
 
 ### Access Points
-- **Frontend Dashboard**: http://localhost:3001
+- **Frontend Dashboard**: http://localhost:3000
 - **Backend API**: http://localhost:8080
 - **API Documentation**: http://localhost:8080/api
 
@@ -108,7 +108,7 @@ sqlite3 dev.db "SELECT COUNT(*) FROM test_results;"
 
 #### Frontend Integration Testing
 1. Open browser developer tools
-2. Navigate to http://localhost:3001
+2. Navigate to http://localhost:3000
 3. Verify network requests show successful API calls
 4. Confirm dashboard displays live test data
 5. Test real-time data refresh functionality
@@ -210,7 +210,7 @@ After each significant change:
 DATABASE_URL="file:./dev.db"  # SQLite for development
 PORT=8080
 NODE_ENV=development
-FRONTEND_URL=http://localhost:3001
+FRONTEND_URL=http://localhost:3000
 
 # Production PostgreSQL
 DATABASE_URL="postgresql://user:password@host:5432/database"
