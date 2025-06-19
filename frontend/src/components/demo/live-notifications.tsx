@@ -16,7 +16,34 @@ interface LiveNotificationsProps {
   onDismiss: (id: string) => void;
 }
 
-export function LiveNotifications({ notifications, onDismiss }: LiveNotificationsProps) {
+interface NotificationItemProps {
+  notification: Notification;
+  onDismiss: (id: string) => void;
+}
+
+function NotificationItem({ notification, onDismiss }: NotificationItemProps) {
+  const [progress, setProgress] = useState(100);
+
+  useEffect(() => {
+    const duration = 4000; // 4 seconds
+    const interval = 50; // Update every 50ms
+    const decrement = (interval / duration) * 100;
+
+    const timer = setInterval(() => {
+      setProgress(prev => {
+        const newProgress = prev - decrement;
+        if (newProgress <= 0) {
+          clearInterval(timer);
+          onDismiss(notification.id);
+          return 0;
+        }
+        return newProgress;
+      });
+    }, interval);
+
+    return () => clearInterval(timer);
+  }, [notification.id, onDismiss]);
+
   const getIcon = (type: string) => {
     switch (type) {
       case 'success':
@@ -43,36 +70,68 @@ export function LiveNotifications({ notifications, onDismiss }: LiveNotification
     }
   };
 
+  const getProgressColor = (type: string) => {
+    switch (type) {
+      case 'success':
+        return 'bg-green-500';
+      case 'error':
+        return 'bg-red-500';
+      case 'warning':
+        return 'bg-orange-500';
+      default:
+        return 'bg-blue-500';
+    }
+  };
+
+  return (
+    <div
+      className={`rounded-lg border shadow-lg animate-in slide-in-from-right duration-300 overflow-hidden ${getBgColor(
+        notification.type
+      )}`}
+    >
+      {/* Progress bar */}
+      <div className="h-1 bg-gray-200">
+        <div
+          className={`h-full transition-all duration-75 ease-linear ${getProgressColor(notification.type)}`}
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+      
+      <div className="p-4">
+        <div className="flex items-start gap-3">
+          {getIcon(notification.type)}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between">
+              <h4 className="text-sm font-medium text-gray-900">
+                {notification.title}
+              </h4>
+              <button
+                onClick={() => onDismiss(notification.id)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <p className="text-sm text-gray-600 mt-1">{notification.message}</p>
+            <p className="text-xs text-gray-500 mt-2">
+              {notification.timestamp.toLocaleTimeString()}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function LiveNotifications({ notifications, onDismiss }: LiveNotificationsProps) {
   return (
     <div className="fixed top-6 right-6 z-40 space-y-2 max-w-sm">
       {notifications.map((notification) => (
-        <div
+        <NotificationItem
           key={notification.id}
-          className={`rounded-lg border p-4 shadow-lg animate-in slide-in-from-right duration-300 ${getBgColor(
-            notification.type
-          )}`}
-        >
-          <div className="flex items-start gap-3">
-            {getIcon(notification.type)}
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between">
-                <h4 className="text-sm font-medium text-gray-900">
-                  {notification.title}
-                </h4>
-                <button
-                  onClick={() => onDismiss(notification.id)}
-                  className="text-gray-400 hover:text-gray-600"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              </div>
-              <p className="text-sm text-gray-600 mt-1">{notification.message}</p>
-              <p className="text-xs text-gray-500 mt-2">
-                {notification.timestamp.toLocaleTimeString()}
-              </p>
-            </div>
-          </div>
-        </div>
+          notification={notification}
+          onDismiss={onDismiss}
+        />
       ))}
     </div>
   );
