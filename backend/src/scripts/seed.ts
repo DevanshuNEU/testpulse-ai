@@ -41,7 +41,36 @@ async function main() {
       },
     });
 
-    console.log(`✅ Created test suite: ${testSuite.name}`);
+    // Create individual test results for this suite
+    const testFiles = ['login.spec.ts', 'dashboard.spec.ts', 'checkout.spec.ts', 'profile.spec.ts', 'navigation.spec.ts'];
+    
+    for (let j = 0; j < totalTests; j++) {
+      const testStartTime = new Date(startTime.getTime() + (j * 1000));
+      const testDuration = faker.number.int({ min: 500, max: 30000 });
+      
+      let status = 'PASSED';
+      if (j < failed) status = 'FAILED';
+      else if (j < failed + skipped) status = 'SKIPPED';
+      else if (j < failed + skipped + flaky) status = 'FLAKY';
+      
+      await prisma.testResult.create({
+        data: {
+          testName: `${faker.hacker.noun()} ${faker.hacker.verb()} test`,
+          testFile: faker.helpers.arrayElement(testFiles),
+          status,
+          duration: testDuration,
+          startTime: testStartTime,
+          endTime: new Date(testStartTime.getTime() + testDuration),
+          error: status === 'FAILED' ? faker.lorem.sentence() : null,
+          browser: testSuite.browser,
+          projectName: 'E2E Tests',
+          tags: JSON.stringify(['e2e', 'automated']),
+          testSuiteId: testSuite.id,
+        },
+      });
+    }
+
+    console.log(`✅ Created test suite: ${testSuite.name} with ${totalTests} test results`);
   }
   // Create some failure patterns
   const failurePatterns = [
