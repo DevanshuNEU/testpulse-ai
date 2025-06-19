@@ -22,6 +22,19 @@ TestPulse AI revolutionizes how QA teams analyze and understand their test resul
 - ⚡ **Real-time Dashboard** - Live updates and collaborative debugging
 - 🚨 **Smart Alerts** - Get notified about critical test suite health issues
 
+## 📸 Dashboard Screenshots
+
+### Live Analytics Dashboard
+The main dashboard provides real-time insights into your test suite performance:
+
+- **📊 Key Metrics**: Total tests, success rates, average duration, last run time
+- **🏃‍♂️ Recent Test Suites**: Latest test executions with detailed breakdowns
+- **🌐 Browser Tracking**: Multi-browser test result monitoring
+- **⚡ Real-time Updates**: Auto-refresh every 30 seconds for live monitoring
+- **🎨 Professional UI**: Clean, responsive design with intuitive data visualization
+
+*Currently running at: `http://localhost:3000` (Frontend) | `http://localhost:8080` (Backend)*
+
 ## 🏗 Architecture
 
 ### Full-Stack TypeScript Architecture
@@ -145,13 +158,21 @@ DATABASE_URL="postgresql://testpulse:password123@localhost:5432/testpulse_dev"
 - [x] Real-time backend status monitoring
 - [x] Comprehensive test data seeding
 
-### 🔄 Phase 3: Dashboard (In Progress)
+### ✅ Phase 3: Dashboard Analytics
+- [x] Live dashboard with real-time test data display
+- [x] Professional stat cards showing key metrics
+- [x] Recent test suites list with detailed breakdowns
+- [x] Responsive design with loading states
+- [x] Browser-specific test execution tracking
+- [x] Real-time data fetching with 30-second auto-refresh
+
+### 🔄 Phase 4: Advanced Analytics (In Progress)
 - [ ] Interactive charts and visualizations
 - [ ] Advanced filtering and search
 - [ ] Performance trend analysis
-- [ ] Real-time test result streaming
+- [ ] Test result export functionality
 
-### 📋 Phase 4: AI Integration (Planned)
+### 📋 Phase 5: AI Integration (Planned)
 - [ ] OpenAI-powered failure analysis
 - [ ] Intelligent test pattern recognition
 - [ ] Predictive failure detection
