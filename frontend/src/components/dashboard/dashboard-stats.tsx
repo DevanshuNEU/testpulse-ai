@@ -1,4 +1,5 @@
 import { Clock, Target, TrendingUp, Zap } from 'lucide-react';
+import { AnimatedCounter } from '@/components/demo/animated-counter';
 
 interface DashboardStatsProps {
   stats: {
@@ -36,7 +37,9 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
           </div>
           <div className="ml-4">
             <h3 className="text-sm font-medium text-gray-500">Total Tests</h3>
-            <p className="text-2xl font-bold text-gray-900">{stats.totalTests.toLocaleString()}</p>
+            <p className="text-2xl font-bold text-gray-900">
+              <AnimatedCounter value={stats.totalTests} />
+            </p>
           </div>
         </div>
       </div>
@@ -48,7 +51,9 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
           </div>
           <div className="ml-4">
             <h3 className="text-sm font-medium text-gray-500">Success Rate</h3>
-            <p className="text-2xl font-bold text-gray-900">{stats.successRate.toFixed(1)}%</p>
+            <p className="text-2xl font-bold text-gray-900">
+              <AnimatedCounter value={stats.successRate} decimals={1} suffix="%" />
+            </p>
           </div>
         </div>
       </div>

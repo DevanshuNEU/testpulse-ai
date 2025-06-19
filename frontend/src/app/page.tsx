@@ -6,6 +6,9 @@ import { apiClient } from '@/lib/api';
 import { DashboardStats } from '@/components/dashboard/dashboard-stats';
 import { TestSuitesList } from '@/components/dashboard/test-suites-list';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { DemoControls } from '@/components/demo/demo-controls';
+import { LiveNotifications } from '@/components/demo/live-notifications';
+import { demoDataGenerator, type Notification } from '@/lib/demo-data';
 
 interface ApiStatus {
   status: 'loading' | 'connected' | 'error';
@@ -39,6 +42,9 @@ export default function HomePage() {
   });
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [dataLoading, setDataLoading] = useState(true);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [isRunningDemo, setIsRunningDemo] = useState(false);
+  const [demoMode, setDemoMode] = useState(false);
 
   useEffect(() => {
     const checkApiConnection = async () => {
@@ -49,7 +55,6 @@ export default function HomePage() {
             status: 'connected', 
             message: 'Backend Connected' 
           });
-          // Fetch dashboard data when connected
           await fetchDashboardData();
         } else {
           setApiStatus({ 
@@ -81,9 +86,45 @@ export default function HomePage() {
     };
 
     checkApiConnection();
-    const interval = setInterval(checkApiConnection, 300000); // Check every 5 minutes instead of 30s
+    const interval = setInterval(checkApiConnection, 30000);
     return () => clearInterval(interval);
   }, []);
+
+  const handleRunScenario = async (scenario: string) => {
+    setIsRunningDemo(true);
+    setDemoMode(true);
+    
+    // Add initial notification
+    const startNotification: Notification = {
+      id: Date.now().toString(),
+      type: 'info',
+      title: 'Demo Started',
+      message: `Running ${scenario.replace('-', ' ')} scenario...`,
+      timestamp: new Date(),
+    };
+    setNotifications(prev => [startNotification, ...prev]);
+
+    // Simulate processing time
+    setTimeout(() => {
+      const scenarioData = demoDataGenerator.generateScenario(scenario);
+      
+      // Update dashboard data
+      if (dashboardData) {
+        setDashboardData({
+          summary: scenarioData.stats,
+          recentSuites: [scenarioData.newSuite, ...dashboardData.recentSuites.slice(0, 4)],
+        });
+      }
+
+      // Add result notification
+      setNotifications(prev => [scenarioData.notification, ...prev.slice(0, 4)]);
+      setIsRunningDemo(false);
+    }, 2000);
+  };
+
+  const dismissNotification = (id: string) => {
+    setNotifications(prev => prev.filter(n => n.id !== id));
+  };
 
   const getStatusIcon = () => {
     switch (apiStatus.status) {
@@ -110,6 +151,25 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
+        {/* Demo Mode Banner */}
+        {demoMode && (
+          <div className="mb-6 bg-gradient-to-r from-purple-500 to-indigo-600 text-white p-4 rounded-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
+                <span className="font-semibold">🎬 DEMO MODE ACTIVE</span>
+                <span className="text-purple-100">- Perfect for presentations and investor demos</span>
+              </div>
+              <button
+                onClick={() => setDemoMode(false)}
+                className="text-purple-100 hover:text-white"
+              >
+                Exit Demo
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <header className="text-center mb-12">
           <div className="flex items-center justify-center mb-4">
@@ -172,10 +232,7 @@ export default function HomePage() {
               </div>
             ) : dashboardData ? (
               <div className="space-y-8">
-                {/* Stats */}
                 <DashboardStats stats={dashboardData.summary} />
-                
-                {/* Recent Test Suites */}
                 <TestSuitesList suites={dashboardData.recentSuites} />
               </div>
             ) : (
@@ -209,8 +266,8 @@ export default function HomePage() {
                 <span>Dashboard UI components</span>
               </div>
               <div className="flex items-center">
-                <Clock className="h-5 w-5 text-yellow-500 mr-3" />
-                <span>Interactive charts and visualizations</span>
+                <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
+                <span>Demo system for presentations</span>
               </div>
               <div className="flex items-center">
                 <Clock className="h-5 w-5 text-yellow-500 mr-3" />
@@ -220,6 +277,20 @@ export default function HomePage() {
           </div>
         )}
       </div>
+
+      {/* Demo Controls */}
+      {dashboardData && (
+        <DemoControls 
+          onRunScenario={handleRunScenario} 
+          isRunning={isRunningDemo}
+        />
+      )}
+
+      {/* Live Notifications */}
+      <LiveNotifications 
+        notifications={notifications}
+        onDismiss={dismissNotification}
+      />
     </div>
   );
 }
