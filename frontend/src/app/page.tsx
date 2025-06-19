@@ -81,7 +81,7 @@ export default function HomePage() {
     };
 
     checkApiConnection();
-    const interval = setInterval(checkApiConnection, 30000); // Check every 30s
+    const interval = setInterval(checkApiConnection, 300000); // Check every 5 minutes instead of 30s
     return () => clearInterval(interval);
   }, []);
 

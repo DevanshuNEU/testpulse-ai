@@ -22,18 +22,31 @@ TestPulse AI revolutionizes how QA teams analyze and understand their test resul
 - ⚡ **Real-time Dashboard** - Live updates and collaborative debugging
 - 🚨 **Smart Alerts** - Get notified about critical test suite health issues
 
-## 📸 Dashboard Screenshots
+## 📸 Live Demo & Testing
 
-### Live Analytics Dashboard
-The main dashboard provides real-time insights into your test suite performance:
+### Current Status
+- **Frontend**: http://localhost:3001 (Next.js dashboard)
+- **Backend API**: http://localhost:8080 (Express server)
+- **Database**: SQLite with 678+ test results across 10 test suites
 
-- **📊 Key Metrics**: Total tests, success rates, average duration, last run time
-- **🏃‍♂️ Recent Test Suites**: Latest test executions with detailed breakdowns
-- **🌐 Browser Tracking**: Multi-browser test result monitoring
-- **⚡ Real-time Updates**: Auto-refresh every 30 seconds for live monitoring
-- **🎨 Professional UI**: Clean, responsive design with intuitive data visualization
+### Quick Test Commands
+```bash
+# Run complete test suite
+./test.sh
 
-*Currently running at: `http://localhost:3000` (Frontend) | `http://localhost:8080` (Backend)*
+# Manual API testing
+curl http://localhost:8080/api/analytics/dashboard | jq
+
+# Verify database
+sqlite3 backend/dev.db "SELECT COUNT(*) FROM test_results;"
+```
+
+### Key Metrics Dashboard
+- **Total Tests**: 678+ individual test results
+- **Success Rate**: 85%+ realistic test outcomes  
+- **Test Suites**: 10 company-themed test suites
+- **Browser Coverage**: Chrome, Firefox, Safari, Edge
+- **Real-time Updates**: Live data refresh every 5 minutes
 
 ## 🏗 Architecture
 
